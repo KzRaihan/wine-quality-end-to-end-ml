@@ -1,3 +1,59 @@
-# ══════════════════════════════════════════════════
-# config.yaml: Application Configuration
-# ══════════════════════════════════════════════════
+# ============================================================
+# CONFIGURATION FILE - Wine Quality End-to-End ML Project
+# ============================================================
+
+
+# Root directory for all ML pipeline outputs
+artifacts_root: artifacts
+
+
+# ---------------------------------------------------------------
+# Stage 01 - Data Ingestion
+# Downloads and extracts raw wine quality dataset from source
+# ---------------------------------------------------------------
+data_ingestion:
+  root_dir: artifacts/data_ingestion
+  source_URL: https://github.com/entbappy/Branching-tutorial/raw/master/winequality-data.zip
+  local_data_file: artifacts/data_ingestion/data.zip
+  unzip_dir: artifacts/data_ingestion
+
+
+# ---------------------------------------------------------------
+# Stage 02 - Data Validation
+# Validates data schema (columns, dtypes) against schema.yaml
+# ---------------------------------------------------------------
+data_validation:
+  root_dir: artifacts/data_validation
+  unzip_data_dir: artifacts/data_ingestion/winequality-red.csv
+  STATUS_FILE: artifacts/data_validation/status.txt
+
+
+# ---------------------------------------------------------------
+# Stage 03 - Data Transformation
+# Cleans data and splits into train/test sets
+# ---------------------------------------------------------------
+data_transformation:
+  root_dir: artifacts/data_transformation
+  data_path: artifacts/data_ingestion/winequality-red.csv
+
+
+# ---------------------------------------------------------------
+# Stage 04 - Model Training
+# Trains the ML model on training data & saves as .joblib
+# ---------------------------------------------------------------
+model_trainer:
+  root_dir: artifacts/model_trainer
+  train_data_path: artifacts/data_transformation/train.csv
+  test_data_path: artifacts/data_transformation/test.csv
+  model_name: model.joblib
+
+
+# ---------------------------------------------------------------
+# Stage 05 - Model Evaluation
+# Evaluates model on test data & logs metrics (RMSE, MAE, R²)
+# ---------------------------------------------------------------
+model_evaluation:
+  root_dir: artifacts/model_evaluation
+  test_data_path: artifacts/data_transformation/test.csv
+  model_path: artifacts/model_trainer/model.joblib
+  metric_file_name: artifacts/model_evaluation/metrics.json
